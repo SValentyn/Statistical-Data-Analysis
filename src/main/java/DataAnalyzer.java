@@ -1,3 +1,5 @@
+import libstemmer_java.java.org.tartarus.snowball.SnowballStemmer;
+import libstemmer_java.java.org.tartarus.snowball.ext.EnglishStemmer;
 import org.knowm.xchart.*;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.internal.series.Series;
@@ -16,6 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Syniuk Valentyn
  */
 public class DataAnalyzer {
+    
+    // Стеммер, который позволяет находить основы слова для заданного исходного слова
+    public static SnowballStemmer stemmer = new EnglishStemmer();
     
     // Список стоп-слов, которые должны быть изъяты из текста сообщений
     public static List<String> stopWords = new ArrayList<>();
@@ -101,14 +106,16 @@ public class DataAnalyzer {
     }
     
     /**
-     * Обрабатывает (очищает) текст сообщений от лишних данных
+     * Обрабатывает текст сообщений от лишних данных + стемминг
      */
     private static String processData(String line) {
         StringBuilder resultLine = new StringBuilder();
         String[] words = line.trim().replaceAll("([^a-z ])", "").toLowerCase().split(" ");
         for (String word : words) {
             if (word != null && word.length() != 0 && !stopWords.contains(word)) {
-                resultLine.append(word.trim()).append(" ");
+                stemmer.setCurrent(word);
+                stemmer.stem();
+                resultLine.append(stemmer.getCurrent().trim()).append(" ");
             }
         }
         return resultLine.toString();

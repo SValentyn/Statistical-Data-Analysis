@@ -8,11 +8,11 @@ import java.nio.charset.StandardCharsets;
 public class TestApp {
     
     public static void main(String[] args) throws Throwable {
-        
+    
         SnowballStemmer stemmer = new EnglishStemmer();
         
-        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("sms-spam-corpus.csv"), StandardCharsets.UTF_8));
-        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("sms-spam.csv"), StandardCharsets.UTF_8));
+        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/test-sms-spam-corpus.csv"), StandardCharsets.UTF_8));
         
         StringBuilder input = new StringBuilder();
         int character;

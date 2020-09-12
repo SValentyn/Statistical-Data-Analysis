@@ -268,18 +268,20 @@ public class DataAnalyzer {
             xData.clear();
             yData.clear();
             AtomicInteger totalLength = new AtomicInteger();
-            int maxLength = Collections.max(data.keySet());
+            AtomicInteger totalWordsCount = new AtomicInteger();
             
             // Set Data
             data.forEach((k, v) -> {
                 if (k != 0) {
                     xData.add(k);
                     yData.add(v);
-                    totalLength.addAndGet(k);
+                    totalLength.addAndGet(k * v);
+                    totalWordsCount.addAndGet(v);
                 }
             });
             chart.addSeries("Частота", xData, yData);
-            chart.addSeries("Средняя длина слов: " + totalLength.intValue() / maxLength, Collections.singletonList(totalLength.intValue() / maxLength), Collections.singletonList(null));
+            chart.addSeries("Средняя длина слова: " + totalLength.intValue() / totalWordsCount.intValue(),
+                    Collections.singletonList(totalLength.intValue() / totalWordsCount.intValue()), Collections.singletonList(null));
             
             return chart;
         }
@@ -293,18 +295,20 @@ public class DataAnalyzer {
             xData.clear();
             yData.clear();
             AtomicInteger totalLength = new AtomicInteger();
-            int maxLength = Collections.max(data.keySet());
+            AtomicInteger totalMessagesCount = new AtomicInteger();
             
             // Set Data
             data.forEach((k, v) -> {
                 if (k != null && k != 0) {
                     xData.add(k);
                     yData.add(v);
-                    totalLength.addAndGet(k);
+                    totalLength.addAndGet(k * v);
+                    totalMessagesCount.addAndGet(v);
                 }
             });
             chart.addSeries("Количество", xData, yData);
-            chart.addSeries("Средняя длина сообщений: " + totalLength.intValue() / maxLength, Collections.singletonList(totalLength.intValue() / maxLength), Collections.singletonList(null));
+            chart.addSeries("Средняя длина сообщения: " + totalLength.intValue() / totalMessagesCount.intValue(),
+                    Collections.singletonList(totalLength.intValue() / totalMessagesCount.intValue()), Collections.singletonList(null));
             
             return chart;
         }

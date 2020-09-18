@@ -108,7 +108,7 @@ public class DataAnalyzer {
     /**
      * Обрабатывает текст сообщений от лишних данных + стемминг
      */
-    private static String processData(String line) {
+    public static String processData(String line) {
         StringBuilder resultLine = new StringBuilder();
         String[] words = line.trim().replaceAll("([^a-z ])", "").toLowerCase().split(" ");
         for (String word : words) {
@@ -124,7 +124,7 @@ public class DataAnalyzer {
     /**
      * Добавляет слова в словарь слов для определённой категории. key = слово, value = частота_использования
      */
-    private static void addWordsToWordDictionary(String[] words, Map<String, Integer> dictionary) {
+    public static void addWordsToWordDictionary(String[] words, Map<String, Integer> dictionary) {
         Arrays.stream(words).forEach(key -> dictionary.put(key, dictionary.getOrDefault(key, 0) + 1));
     }
     
@@ -140,7 +140,7 @@ public class DataAnalyzer {
     /**
      * Получает список слов из словаря слов, определённой категории
      */
-    private static List<Word> getWordsFromWordDictionary(Map<String, Integer> dictionary) {
+    public static List<Word> getWordsFromWordDictionary(Map<String, Integer> dictionary) {
         List<Word> words = new ArrayList<>();
         dictionary.forEach((k, v) -> {
             words.add(new Word(k, k.length(), v));
@@ -151,14 +151,14 @@ public class DataAnalyzer {
     /**
      * Добавляет в словарь сообщений, для определённой категории, пару: key = длина_сообщения, value = частота_использования
      */
-    private static void addLineToMessageDictionary(String line, Map<Integer, Integer> dictionary) {
+    public static void addLineToMessageDictionary(String line, Map<Integer, Integer> dictionary) {
         dictionary.put(line.length(), dictionary.getOrDefault(line.length(), 0) + 1);
     }
     
     /**
      * Записывает словарь в соответствующий файл
      */
-    private static void writeDictionaryToFile(Map<String, Integer> dictionary, Writer writer) {
+    public static void writeDictionaryToFile(Map<String, Integer> dictionary, Writer writer) {
         dictionary.forEach((k, v) -> {
             try {
                 writer.write(k + "=" + v + "\n");
@@ -231,7 +231,7 @@ public class DataAnalyzer {
     /**
      * Внутренний класс, что обеспечивает визуализацию данных на различных графиках
      */
-    static class Visualizer {
+    public static class Visualizer {
         
         private final Font baseFont = new Font(Font.DIALOG, Font.PLAIN, 18);
         private final Font axisFont = new Font(Font.DIALOG, Font.PLAIN, 16);
@@ -289,7 +289,12 @@ public class DataAnalyzer {
         private Chart<XYStyler, XYSeries> initializeAndGetXYChart(Map<Integer, Integer> data, String title) {
             
             // Create Chart
-            XYChart chart = new XYChartBuilder().width(1760).height(960).title("Распределение по " + title).xAxisTitle("Длина сообщения").yAxisTitle("Количество сообщений").build();
+            XYChart chart = new XYChartBuilder()
+                    .width(1760).height(960)
+                    .title("Распределение по " + title)
+                    .xAxisTitle("Длина сообщения")
+                    .yAxisTitle("Количество сообщений")
+                    .build();
             chart.getStyler().setAxisTitleFont(axisFont);
             
             xData.clear();
@@ -313,10 +318,15 @@ public class DataAnalyzer {
             return chart;
         }
         
-        public Chart<CategoryStyler, CategorySeries> initializeAndGetStickChart(Map<String, Integer> data, String title) {
+        private Chart<CategoryStyler, CategorySeries> initializeAndGetStickChart(Map<String, Integer> data, String title) {
             
             // Create Chart
-            CategoryChart chart = new CategoryChartBuilder().width(1760).height(960).title("Часто употребляемые слова, для " + title).xAxisTitle("Слова").yAxisTitle("Частота использования").build();
+            CategoryChart chart = new CategoryChartBuilder()
+                    .width(1760).height(960)
+                    .title("Часто употребляемые слова, для " + title)
+                    .xAxisTitle("Слова")
+                    .yAxisTitle("Частота использования")
+                    .build();
             chart.getStyler().setDefaultSeriesRenderStyle(CategorySeries.CategorySeriesRenderStyle.Stick);
             chart.getStyler().setAxisTitleFont(axisFont);
             
@@ -347,4 +357,3 @@ public class DataAnalyzer {
     }
     
 }
-

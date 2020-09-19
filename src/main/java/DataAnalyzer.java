@@ -61,9 +61,9 @@ public class DataAnalyzer {
     public static Map<String, Integer> frequentlyUsedSpamWordsDictionary = new LinkedHashMap<>();
     
     public static void main(String[] args) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
-             Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/ham.txt"), StandardCharsets.UTF_8));
-             Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/spam.txt"), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
+             Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/processedHamDict.txt"), StandardCharsets.UTF_8));
+             Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/processedSpamDict.txt"), StandardCharsets.UTF_8))) {
             
             reader.lines()
                     .skip(1) // Skips the first line

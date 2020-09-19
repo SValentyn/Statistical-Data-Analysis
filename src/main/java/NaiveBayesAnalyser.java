@@ -30,6 +30,12 @@ public class NaiveBayesAnalyser {
     public static Map<String, String[]> trainingExamples = new HashMap<>();
     
     public static void main(String[] args) {
+        NaiveBayes snsNaiveBayes = new NaiveBayes();
+        NaiveBayes emailNaiveBayes = new NaiveBayes();
+        
+        boolean smsAlreadyAnalyzed = false;
+        boolean emailAlreadyAnalyzed = false;
+        
         while (true) {
             System.out.println();
             System.out.println(" 0 :: SMS dataset");
@@ -41,26 +47,32 @@ public class NaiveBayesAnalyser {
                 int choice = scanner.nextInt();
                 switch (choice) {
                     case 0: {
-                        analyzeSMS();
-                        setDatasetFilesFromFolder(TypeOfSet.SMS, "./output/sms/");
-                        loadExamplesInMemory();
-                        NaiveBayes naiveBayes = getTrainedClassifierKnowledgeBase();
+                        if (!smsAlreadyAnalyzed) {
+                            analyzeSMS();
+                            setDatasetsFromFiles(TypeOfSet.SMS, "./output/sms/");
+                            loadExamplesInMemory();
+                            snsNaiveBayes = getTrainedClassifierKnowledgeBase(trainingExamples);
+                            smsAlreadyAnalyzed = true;
+                        }
                         
                         System.out.print("Enter your message: ");
                         String text = scanner.next();
-                        String category = categorizeText(naiveBayes, text);
+                        String category = categorizeText(snsNaiveBayes, text);
                         System.out.format("Your message \"%s\" was classified as \"%s\"%n", text, category);
                         break;
                     }
                     case 1: {
-                        analyzeEmail();
-                        setDatasetFilesFromFolder(TypeOfSet.EMAIL, "./output/email/");
-                        loadExamplesInMemory();
-                        NaiveBayes naiveBayes = getTrainedClassifierKnowledgeBase();
+                        if (!emailAlreadyAnalyzed) {
+                            analyzeEmail();
+                            setDatasetsFromFiles(TypeOfSet.EMAIL, "./output/email/");
+                            loadExamplesInMemory();
+                            emailNaiveBayes = getTrainedClassifierKnowledgeBase(trainingExamples);
+                            emailAlreadyAnalyzed = true;
+                        }
                         
                         System.out.print("Enter your message: ");
-                        String text = scanner.nextLine();
-                        String category = categorizeText(naiveBayes, text);
+                        String text = scanner.next();
+                        String category = categorizeText(emailNaiveBayes, text);
                         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", text, category);
                         break;
                     }
@@ -85,8 +97,8 @@ public class NaiveBayesAnalyser {
      */
     private static void analyzeSMS() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
-             Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/sms/totalHam.txt"), StandardCharsets.UTF_8));
-             Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/sms/totalSpam.txt"), StandardCharsets.UTF_8))) {
+             Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/sms/processedHamWords.txt"), StandardCharsets.UTF_8));
+             Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/sms/processedSpamWords.txt"), StandardCharsets.UTF_8))) {
             
             reader.lines()
                     .skip(1) // Skips the first line
@@ -116,13 +128,11 @@ public class NaiveBayesAnalyser {
     private static void analyzeEmail() throws IOException {
         ArrayList<File> hamEmailFiles = listFilesForFolder("src/main/resources/email/", ".ham.txt");
         ArrayList<File> spamEmailFiles = listFilesForFolder("src/main/resources/email/", ".spam.txt");
-        Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/email/totalHam.txt"), StandardCharsets.UTF_8));
-        Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/email/totalSpam.txt"), StandardCharsets.UTF_8));
+        Writer hamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/email/processedHamWords.txt"), StandardCharsets.UTF_8));
+        Writer spamWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./output/email/processedSpamWords.txt"), StandardCharsets.UTF_8));
         
         hamEmailFiles.forEach(file -> {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-                 ) {
-                
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 reader.lines().forEach(line -> {
                     line = DataAnalyzer.processData(line);
                     if (!line.equals("")) {
@@ -137,7 +147,6 @@ public class NaiveBayesAnalyser {
         
         spamEmailFiles.forEach(file -> {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
-                
                 reader.lines().forEach(line -> {
                     line = DataAnalyzer.processData(line);
                     if (!line.equals("")) {
@@ -149,6 +158,11 @@ public class NaiveBayesAnalyser {
                 e.printStackTrace();
             }
         });
+        
+        hamWriter.flush();
+        hamWriter.close();
+        spamWriter.flush();
+        spamWriter.close();
     }
     
     /**
@@ -168,13 +182,13 @@ public class NaiveBayesAnalyser {
     /**
      * Устанавливает наборы данных для обучения классификатора в соответствии с типом набора
      */
-    public static void setDatasetFilesFromFolder(TypeOfSet type, String folder) {
+    public static void setDatasetsFromFiles(TypeOfSet type, String folder) {
         if (type.equals(TypeOfSet.SMS)) {
-            trainingFiles.put("ham", folder + "totalHam.txt");
-            trainingFiles.put("spam", folder + "totalSpam.txt");
+            trainingFiles.put("ham", folder + "processedHamWords.txt");
+            trainingFiles.put("spam", folder + "processedSpamWords.txt");
         } else if (type.equals(TypeOfSet.EMAIL)) {
-            trainingFiles.put("ham", folder + "totalHam.txt");
-            trainingFiles.put("spam", folder + "totalSpam.txt");
+            trainingFiles.put("ham", folder + "processedHamWords.txt");
+            trainingFiles.put("spam", folder + "processedSpamWords.txt");
         }
     }
     
@@ -182,6 +196,7 @@ public class NaiveBayesAnalyser {
      * Загружает тестовые данные из файлов в память
      */
     private static void loadExamplesInMemory() {
+        trainingExamples = new HashMap<>();
         for (Map.Entry<String, String> entry : trainingFiles.entrySet()) {
             trainingExamples.put(entry.getKey(), readLines(entry.getValue()));
         }
@@ -216,9 +231,10 @@ public class NaiveBayesAnalyser {
     /**
      * В методе происходит обучение классификатора
      *
+     * @param trainingExamples текстовые наборы для обучения классификатора
      * @return обученный классификатор
      */
-    private static NaiveBayes getTrainedClassifierKnowledgeBase() {
+    private static NaiveBayes getTrainedClassifierKnowledgeBase(Map<String, String[]> trainingExamples) {
         
         // Train classifier
         NaiveBayes naiveBayes = new NaiveBayes();
@@ -234,7 +250,7 @@ public class NaiveBayesAnalyser {
     /**
      * Предсказывает категорию текста с помощью уже подготовленного классификатора и возвращает его категорию
      */
-    private static String categorizeText(NaiveBayes naiveBayes, String text) {
+    public static String categorizeText(NaiveBayes naiveBayes, String text) {
         return naiveBayes.predict(text);
     }
     

@@ -223,16 +223,16 @@ public class DataAnalyzer {
         Map<Integer, Integer> hamGeneralizedData = generalizeLengthAndFrequencyWords(hamWords);
         Map<Integer, Integer> spamGeneralizedData = generalizeLengthAndFrequencyWords(spamWords);
         
-        new Visualizer(hamGeneralizedData, TextType.WORD, "длине слов, для ham-сообщений").display();
-        new Visualizer(spamGeneralizedData, TextType.WORD, "длине слов, для spam-сообщений").display();
+        new Visualizer(hamGeneralizedData, TypeOfText.WORD, "длине слов, для ham-сообщений").display();
+        new Visualizer(spamGeneralizedData, TypeOfText.WORD, "длине слов, для spam-сообщений").display();
     }
     
     /**
      * Вызывает показ графиков, что отображают распределение сообщений по их длине для каждой категории
      */
     private static void displayXYCharts() {
-        new Visualizer(hamMessageDictionary, TextType.MESSAGE, "длине сообщений, для ham-сообщений").display();
-        new Visualizer(spamMessageDictionary, TextType.MESSAGE, "длине сообщений, для spam-сообщений").display();
+        new Visualizer(hamMessageDictionary, TypeOfText.MESSAGE, "длине сообщений, для ham-сообщений").display();
+        new Visualizer(spamMessageDictionary, TypeOfText.MESSAGE, "длине сообщений, для spam-сообщений").display();
     }
     
     /**
@@ -255,10 +255,10 @@ public class DataAnalyzer {
         private List<Integer> xData = new ArrayList<>();
         private List<Integer> yData = new ArrayList<>();
         
-        public Visualizer(Map<Integer, Integer> data, TextType textType, String title) {
-            if (textType.equals(TextType.WORD)) {
+        public Visualizer(Map<Integer, Integer> data, TypeOfText type, String title) {
+            if (type.equals(TypeOfText.WORD)) {
                 chart = initializeAndGetHistogramChart(data, title);
-            } else if (textType.equals(TextType.MESSAGE)) {
+            } else if (type.equals(TypeOfText.MESSAGE)) {
                 chart = initializeAndGetXYChart(data, title);
             }
         }

@@ -1,4 +1,4 @@
-package libstemmer_java.java.org.tartarus.snowball;
+package stemmer;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

@@ -1,13 +1,22 @@
 # Statistical-Data-Analysis
 
+## Input Files
+
+#### Terms of Reference
+[`Task_1`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/Task_1.pdf)
+[`Task_2`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/Task_2.pdf)
+
 ## Output Files
-### Dictionaries
+
+#### Dictionaries
 [`processedHamDict.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/processedHamDict.txt)
 [`processedSpamDict.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/processedSpamDict.txt)
-### Processed Words for SMS
+
+#### Processed Words for SMS
 [`processedHamWords.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/sms/processedHamWords.txt)
 [`processedSpamWords.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/sms/processedSpamWords.txt)
-### Processed Words for Emails
+
+#### Processed Words for Emails
 [`processedHamWords.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/email/processedHamWords.txt)
 [`processedSpamWords.txt`](https://github.com/SValentyn/Statistical-Data-Analysis/blob/master/output/email/processedSpamWords.txt)
 

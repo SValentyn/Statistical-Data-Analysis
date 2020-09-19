@@ -18,8 +18,8 @@ public class NaiveBayesExample {
         
         // Map of dataset files
         Map<String, String> trainingFiles = new HashMap<>();
-        trainingFiles.put("spam", "spam.txt");
-        trainingFiles.put("ham", "ham.txt");
+        trainingFiles.put("ham", "./output/email/processedHamWords.txt");
+        trainingFiles.put("spam", "./output/email/processedSpamWords.txt");
         
         // Loading examples in memory
         Map<String, String[]> trainingExamples = new HashMap<>();

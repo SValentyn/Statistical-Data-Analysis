@@ -1,17 +1,36 @@
-import libstemmer_java.java.org.tartarus.snowball.SnowballStemmer;
-import libstemmer_java.java.org.tartarus.snowball.ext.EnglishStemmer;
-import org.knowm.xchart.*;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.CategorySeries;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.internal.series.Series;
 import org.knowm.xchart.style.CategoryStyler;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.XYStyler;
+import stemmer.SnowballStemmer;
+import stemmer.ext.EnglishStemmer;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -23,7 +42,7 @@ public class DataAnalyzer {
     public static SnowballStemmer stemmer = new EnglishStemmer();
     
     // Список стоп-слов, которые должны быть изъяты из текста сообщений
-    public static List<String> stopWords = new ArrayList<>();
+    public static List<String> stopWords = fillStopWords();
     
     // Списки, что хранят слова, которые использовались в сообщениях
     public static List<Word> hamWords = new ArrayList<>();
@@ -40,10 +59,6 @@ public class DataAnalyzer {
     // Словари, которые представляют собой :: слово=количество_использований
     public static Map<String, Integer> frequentlyUsedHamWordsDictionary = new LinkedHashMap<>();
     public static Map<String, Integer> frequentlyUsedSpamWordsDictionary = new LinkedHashMap<>();
-    
-    static {
-        fillStopWords();
-    }
     
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
@@ -94,7 +109,7 @@ public class DataAnalyzer {
     /**
      * Заполняет список стоп-слов
      */
-    private static void fillStopWords() {
+    private static List<String> fillStopWords() {
         String[] arrayStopWords = new String[]{
                 "", "a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "l", "m",
                 "n", "o", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z",
@@ -102,7 +117,7 @@ public class DataAnalyzer {
                 "am", "is", "are", "be", "being", "been",
                 "have", "has", "having", "had",
                 "do", "does", "doing", "did" };
-        stopWords.addAll(Arrays.asList(arrayStopWords));
+        return Arrays.asList(arrayStopWords);
     }
     
     /**
@@ -191,11 +206,11 @@ public class DataAnalyzer {
      * Будет содержать самые часто используемые слова в сообщениях для каждой категории
      */
     private static Map<String, Integer> getFrequentlyUsedWordsFromDictionary(Map<String, Integer> dictionary) {
-        Map<String, Integer> resultWordsDictionary = new LinkedHashMap<>();
+        Map<String, Integer> frequentlyUsedWordsDictionary = new LinkedHashMap<>();
         dictionary.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).limit(20)
-                .forEach(e -> resultWordsDictionary.put(e.getKey(), e.getValue()));
-        return resultWordsDictionary;
+                .forEach(e -> frequentlyUsedWordsDictionary.put(e.getKey(), e.getValue()));
+        return frequentlyUsedWordsDictionary;
     }
     
     /**
@@ -262,7 +277,12 @@ public class DataAnalyzer {
         private Chart<CategoryStyler, CategorySeries> initializeAndGetHistogramChart(Map<Integer, Integer> data, String title) {
             
             // Create Chart
-            CategoryChart chart = new CategoryChartBuilder().width(1760).height(960).title("Распределение по " + title).xAxisTitle("Длина слова").yAxisTitle("Частота использования").build();
+            CategoryChart chart = new CategoryChartBuilder()
+                    .width(1760).height(960)
+                    .title("Распределение по " + title)
+                    .xAxisTitle("Длина слова")
+                    .yAxisTitle("Частота использования")
+                    .build();
             chart.getStyler().setAxisTitleFont(axisFont);
             
             xData.clear();

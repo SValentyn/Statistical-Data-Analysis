@@ -1,4 +1,4 @@
-package libstemmer_java.java.org.tartarus.snowball;
+package stemmer;
 
 public abstract class SnowballStemmer extends SnowballProgram {
     

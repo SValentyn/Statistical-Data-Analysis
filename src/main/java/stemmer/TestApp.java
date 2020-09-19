@@ -1,6 +1,6 @@
-package libstemmer_java.java.org.tartarus.snowball;
+package stemmer;
 
-import libstemmer_java.java.org.tartarus.snowball.ext.EnglishStemmer;
+import stemmer.ext.EnglishStemmer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -11,8 +11,8 @@ public class TestApp {
     
         SnowballStemmer stemmer = new EnglishStemmer();
         
-        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
-        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/test-sms-spam-corpus.csv"), StandardCharsets.UTF_8));
+        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/resources/sms/sms-spam-corpus.csv"), StandardCharsets.UTF_8));
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/sms/test-sms-spam-corpus.csv"), StandardCharsets.UTF_8));
         
         StringBuilder input = new StringBuilder();
         int character;

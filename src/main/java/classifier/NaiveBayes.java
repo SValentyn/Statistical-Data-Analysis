@@ -128,7 +128,7 @@ public class NaiveBayes {
         //check is prior probabilities are given
         if (categoryPriors == null) {
             //if not estimate the priors from the sample
-            knowledgeBase.c = featureStats.categoryCounts.size(); //number of cateogries
+            knowledgeBase.c = featureStats.categoryCounts.size(); //number of categories
             knowledgeBase.logPriors = new HashMap<>();
             
             String category;

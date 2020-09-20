@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Syniuk Valentyn
+ */
 public class NaiveBayesExample {
     
     public static void main(String[] args) {

@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * @author Syniuk Valentyn
+ */
 public class NaiveBayesAnalyser {
     
     private static final Scanner scanner = new Scanner(System.in);

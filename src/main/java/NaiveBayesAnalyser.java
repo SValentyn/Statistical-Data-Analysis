@@ -59,7 +59,9 @@ public class NaiveBayesAnalyser {
                         }
                         
                         System.out.print("Enter your message: ");
-                        String text = scanner.next();
+                        scanner.nextLine();
+                        String text = scanner.nextLine();
+                    
                         String category = categorizeText(snsNaiveBayes, text);
                         System.out.format("Your message \"%s\" was classified as \"%s\"%n", text, category);
                         break;
@@ -72,9 +74,11 @@ public class NaiveBayesAnalyser {
                             emailNaiveBayes = getTrainedClassifierKnowledgeBase(trainingExamples);
                             emailAlreadyAnalyzed = true;
                         }
-                        
+    
                         System.out.print("Enter your message: ");
-                        String text = scanner.next();
+                        scanner.nextLine();
+                        String text = scanner.nextLine();
+                        
                         String category = categorizeText(emailNaiveBayes, text);
                         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", text, category);
                         break;
